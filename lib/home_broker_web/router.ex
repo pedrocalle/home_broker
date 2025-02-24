@@ -7,6 +7,11 @@ defmodule HomeBrokerWeb.Router do
 
   scope "/api", HomeBrokerWeb do
     pipe_through :api
+
+    resources "/assets", AssetController, only: [:create, :index]
+    resources "/wallets", WalletController, only: [:create, :index, :show]
+    get "/assets/:symbol", AssetController, :show
+    post "/wallets/:wallet/assets", WalletController, :create_wallet_asset
   end
 
   # Enable LiveDashboard in development

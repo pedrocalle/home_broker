@@ -1,28 +1,31 @@
 defmodule HomeBrokerWeb.AssetController do
+  alias HomeBrokerWeb.FallbackController
   alias HomeBroker.Assets
   use HomeBrokerWeb, :controller
 
+  action_fallback FallbackController
+
   def create(conn, params) do
-    with {:ok, asset} <- Assets.create(params) do
+    with {:ok, _asset} <- Assets.create(params) do
       conn
       |> put_status(:created)
-      |> render(:create, %{asset: asset})
+      |> render(:create, %{})
     end
   end
 
-  def get(conn, %{"symbol" => symbol}) do
+  def show(conn, %{"symbol" => symbol}) do
     with {:ok, asset} <- Assets.get(symbol) do
       conn
       |> put_status(:ok)
-      |> render(:get, %{asset: asset})
+      |> render(:show, %{asset: asset})
     end
   end
 
-  def get(conn, _params) do
-    with {:ok, asset} <- Assets.get_all() do
+  def index(conn, _params) do
+    with {:ok, assets} <- Assets.get_all() do
       conn
       |> put_status(:ok)
-      |> render(:get_all, %{asset: asset})
+      |> render(:index, %{assets: assets})
     end
   end
 end
